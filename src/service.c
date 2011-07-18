@@ -2863,6 +2863,14 @@ static gint service_compare(gconstpointer a, gconstpointer b,
 			return 1;
 	}
 
+	if (service_a->type != service_b->type) {
+	  if (service_a->type == CONNMAN_SERVICE_TYPE_ETHERNET)
+	    return -1;
+
+	  if (service_b->type == CONNMAN_SERVICE_TYPE_ETHERNET)
+	    return 1;
+	}
+
 	if (service_a->order > service_b->order)
 		return -1;
 
