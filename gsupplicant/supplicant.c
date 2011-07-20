@@ -2769,6 +2769,7 @@ static void add_network_security(DBusMessageIter *dict, GSupplicantSSID *ssid)
 	case G_SUPPLICANT_SECURITY_WEP:
 		key_mgmt = "NONE";
 		add_network_security_wep(dict, ssid);
+		add_network_security_ciphers(dict, ssid);
 		break;
 	case G_SUPPLICANT_SECURITY_PSK:
 		key_mgmt = "WPA-PSK";
