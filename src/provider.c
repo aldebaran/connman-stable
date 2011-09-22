@@ -270,6 +270,11 @@ static void provider_append_routes(gpointer key, gpointer value,
 							route->gateway,
 							prefix_len);
 	} else {
+		unsigned char prefix_len =
+			__connman_ipconfig_netmask_prefix_len(route->netmask);
+		connman_inet_add_network_route_with_table(index, route->host,
+						route->gateway,
+						prefix_len);
 		connman_inet_add_network_route(index, route->host,
 						route->gateway,
 						route->netmask);

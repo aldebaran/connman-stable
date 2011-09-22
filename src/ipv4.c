@@ -25,6 +25,7 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -43,7 +44,7 @@ static int ipv4_probe(struct connman_element *element)
 	struct connman_element *connection;
 	const char *address = NULL, *netmask = NULL, *broadcast = NULL;
 	const char *peer = NULL, *nameserver = NULL, *pac = NULL;
-	char *timeserver = NULL;
+	char *timeserver = NULL, *subnet = NULL;
 	unsigned char prefixlen;
 
 	DBG("element %p name %s", element, element->name);
@@ -72,6 +73,14 @@ static int ipv4_probe(struct connman_element *element)
 		return -EINVAL;
 
 	prefixlen = __connman_ipconfig_netmask_prefix_len(netmask);
+
+	subnet =  __connman_ipconfig_address_subnet(address, netmask);
+	if (subnet != NULL) {
+		connman_inet_add_network_route_with_table(element->index,
+							subnet, NULL, prefixlen);
+		free(subnet);
+		subnet = NULL;
+	}
 
 	if ((__connman_inet_modify_address(RTM_NEWADDR,
 			NLM_F_REPLACE | NLM_F_ACK, element->index,
@@ -109,7 +118,7 @@ static void ipv4_remove(struct connman_element *element)
 {
 	const char *address = NULL, *netmask = NULL, *broadcast = NULL;
 	const char *peer = NULL, *nameserver = NULL;
-	char *timeserver = NULL;
+	char *timeserver = NULL, *subnet = NULL;
 	unsigned char prefixlen;
 
 	DBG("element %p name %s", element, element->name);
@@ -143,6 +152,14 @@ static void ipv4_remove(struct connman_element *element)
 	}
 
 	prefixlen = __connman_ipconfig_netmask_prefix_len(netmask);
+
+	subnet = __connman_ipconfig_address_subnet(address, netmask);
+	if (subnet) {
+		connman_inet_del_network_route_with_table(element->index,
+							subnet, NULL);
+		free(subnet);
+		subnet = NULL;
+	}
 
 	if ((__connman_inet_modify_address(RTM_DELADDR, 0, element->index,
 			AF_INET, address, peer, prefixlen, broadcast) < 0))

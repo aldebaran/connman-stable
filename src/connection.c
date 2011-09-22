@@ -127,6 +127,10 @@ static struct gateway_data *add_gateway(int index, const char *gateway,
 	data->vpn_ip = NULL;
 	data->vpn = FALSE;
 	data->vpn_phy_index = -1;
+	if (data->ipv4_gateway != NULL)
+		connman_inet_add_network_route_with_table(data->index, NULL,
+							  data->ipv4_gateway,
+							  0);
 
 	__connman_element_foreach(NULL, CONNMAN_ELEMENT_TYPE_CONNECTION,
 							find_element, data);
@@ -212,6 +216,10 @@ static int remove_gateway(struct gateway_data *data)
 	int err;
 
 	DBG("gateway %s", data->ipv4_gateway);
+
+	if (data->ipv4_gateway != NULL)
+		connman_inet_del_network_route_with_table(data->index, NULL,
+							  data->ipv4_gateway);
 
 	gateway_list = g_slist_remove(gateway_list, data);
 
