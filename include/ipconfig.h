@@ -82,7 +82,8 @@ void connman_ipconfig_unref(struct connman_ipconfig *ipconfig);
 
 void *connman_ipconfig_get_data(struct connman_ipconfig *ipconfig);
 void connman_ipconfig_set_data(struct connman_ipconfig *ipconfig, void *data);
-
+char* __connman_ipconfig_address_subnet(const char *address,
+					const char *netmask);
 int connman_ipconfig_get_index(struct connman_ipconfig *ipconfig);
 const char *connman_ipconfig_get_ifname(struct connman_ipconfig *ipconfig);
 
