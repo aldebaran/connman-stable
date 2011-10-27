@@ -223,8 +223,9 @@ int __connman_log_init(const char *debug, connman_bool_t detach)
 			desc->flags |= CONNMAN_DEBUG_FLAG_PRINT;
 	}
 
-	if (detach == FALSE)
-		option |= LOG_PERROR;
+	/* always log to syslog */
+	/* if (detach == FALSE) */
+	/* 	option |= LOG_PERROR; */
 
 	signal_setup(signal_handler);
 
