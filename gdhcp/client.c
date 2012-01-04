@@ -1338,12 +1338,6 @@ void g_dhcp_client_stop(GDHCPClient *dhcp_client)
 {
 	switch_listening_mode(dhcp_client, L_NONE);
 
-	if (dhcp_client->state == BOUND ||
-			dhcp_client->state == RENEWING ||
-				dhcp_client->state == REBINDING)
-		send_release(dhcp_client, dhcp_client->server_ip,
-					dhcp_client->requested_ip);
-
 	if (dhcp_client->timeout > 0) {
 		g_source_remove(dhcp_client->timeout);
 		dhcp_client->timeout = 0;
