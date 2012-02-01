@@ -555,7 +555,7 @@ static void interface_added(GSupplicantInterface *interface)
 
 	if (wifi->tethering == TRUE)
 		return;
-	
+
 	wifi_scan(wifi->device);
 }
 
@@ -692,6 +692,7 @@ static void interface_state(GSupplicantInterface *interface)
 		if (get_bssid(device, bssid, &bssid_len) == 0)
 			connman_network_set_address(network,
 							bssid, bssid_len);
+		connman_network_set_associating(network, FALSE);
 		connman_network_set_connected(network, TRUE);
 		break;
 
